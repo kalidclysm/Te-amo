@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>TE AMO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/x-icon" href="../heart.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+```
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+    }
+
+    body {
+        font-family: 'Press Start 2P', system-ui, sans-serif;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+    }
+
+    .hero {
+        position: relative;
+        width: 100%;
+        height: 100dvh;
+        max-width: 900px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .hero .bg-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    @media (min-width: 601px) {
+        body { align-items: center; }
+        .hero {
+            height: auto;
+            max-height: calc(100dvh - 40px);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .hero .bg-img {
+            position: static;
+            width: 100%;
+            height: auto;
+            object-fit: unset;
+        }
+    }
+
+    .hero .overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(12px, 6vw, 40px);
+        text-align: center;
+        color: #fff;
+        pointer-events: auto;
+        gap: clamp(4px, 1.5vh, 12px);
+    }
+
+    h1, h3, p, a {
+        font-family: 'Press Start 2P', inherit;
+        margin: 0;
+    }
+
+    h1#title {
+        color: rgb(180, 127, 167);
+        font-size: clamp(0.7rem, 3.5vw, 1.5rem);
+        line-height: 1.4;
+        transition: opacity .3s ease;
+    }
+
+    .overlay > p {
+        color: #fff;
+        font-size: clamp(0.45rem, 2vw, 0.7rem);
+        margin: 0;
+        transition: opacity .3s ease;
+    }
+
+    #bat {
+        width: clamp(80px, 22vw, 200px);
+        height: auto;
+        display: block;
+        transition: opacity .3s ease;
+    }
+
+    .env-wrap {
+        display: inline-block;
+        position: relative;
+        animation: floatY 3s ease-in-out infinite;
+        transition: transform .45s ease;
+        margin-top: clamp(4px, 1vh, 12px);
+    }
+
+    #envelope {
+        width: clamp(80px, 22vw, 140px);
+        height: auto;
+        display: block;
+        cursor: pointer;
+        transition: transform .45s ease, opacity .25s ease;
+        will-change: transform;
+    }
+
+    @keyframes floatY {
+        0%   { transform: translateY(0); }
+        50%  { transform: translateY(-8px); }
+        100% { transform: translateY(0); }
+    }
+
+    @keyframes envelopeOpen {
+        0%   { transform: translateY(0) scale(1); }
+        100% { transform: translateY(-12px) scale(1.5); }
+    }
+
+    .env-wrap.opening {
+        animation: envelopeOpen .45s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+
+    .overlay.opened #bat,
+    .overlay.opened #title,
+    .overlay.opened > p {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .paper {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(88%, 360px);
+        aspect-ratio: 1090 / 1380;
+        max-height: 80dvh;
+        overflow-y: auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        z-index: 60;
+        transform: translate(-50%, -52%) scale(0.95);
+        transition: transform .35s ease, opacity .35s ease;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        background-image: url('recursos/PAPER.PNG');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        padding: 12% 13% 10%;
+        overscroll-behavior: contain;
+    }
+
+    .paper.visible {
+        transform: translate(-50%, -52%) scale(1);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .paper::-webkit-scrollbar { width: 4px; }
+    .paper::-webkit-scrollbar-thumb { background: rgba(0,0,0,.25); border-radius: 2px; }
+
+    .paper .note {
+        color: #000;
+        font-size: clamp(0.45rem, 1.8vw, 0.78rem);
+        line-height: 2.1;
+        text-align: left;
+        width: 100%;
+    }
+
+    .paper .note p {
+        margin: 0 0 1.2em;
+        color: #000;
+    }
+
+    .paper .note p:last-child {
+        margin-bottom: 0;
+    }
+
+    #closeBtn {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: clamp(12px, 4dvh, 32px);
+        z-index: 80;
+        width: clamp(100px, 28vw, 180px);
+        height: auto;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .35s ease;
+    }
+
+    #closeBtn.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #hearts-container {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 50;
+    }
+
+    .heart {
+        position: absolute;
+        background-image: url('recursos/HEART.PNG');
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.9;
+        will-change: transform, opacity;
+        animation-name: twinkle;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+        transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+
+    @keyframes twinkle {
+        0%   { transform: translateY(0) scale(0.9) rotate(0deg);    opacity: 0.75; }
+        50%  { transform: translateY(-6px) scale(1.05) rotate(6deg); opacity: 1; }
+        100% { transform: translateY(0) scale(0.95) rotate(-6deg);   opacity: 0.85; }
+    }
+
+    .heart.fade-out {
+        animation-play-state: paused !important;
+        opacity: 0 !important;
+        transform: scale(0.6) !important;
+    }
+
+    @media (max-width: 380px) {
+        .paper { width: 94%; padding: 18px 14px; }
+        .paper .note { font-size: 0.4rem; }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+        .paper { max-height: 70dvh; }
+        #closeBtn { bottom: 4px; }
+    }
+</style>
+```
+
+</head>
+
+<body>
+    <audio id="bg-audio" src="recursos/Entombed.mp3" loop playsinline muted></audio>
+
+```
+<div class="hero">
+    <img class="bg-img" src="recursos/BACKGROUND.PNG" alt="background">
+
+    <div class="overlay">
+        <h1 id="title">Te amo</h1>
+        <p id="subtitulo">abre el sobre:</p>
+        <img id="bat" src="recursos/BAT.GIF" alt="bat">
+        <span class="env-wrap">
+            <img id="envelope" src="recursos/ENVELOPE.PNG" alt="envelope">
+        </span>
+
+        <div id="paper" class="paper" aria-hidden="true">
+            <div class="note">
+                <p></p>
+            </div>
+        </div>
+
+        <img id="closeBtn" src="recursos/CERRARBUTTON.PNG" alt="cerrar">
+        <div id="hearts-container" aria-hidden="true"></div>
+    </div>
+</div>
+
+<script>
+    const audio = document.getElementById('bg-audio');
+
+    if (audio) {
+        audio.loop   = false;
+        audio.volume = 0;
+    }
+
+    let fadeInterval = null;
+
+    function fadeIn(targetVol = 0.7, duration = 1800) {
+        if (!audio) return;
+        clearInterval(fadeInterval);
+        audio.muted = false;
+        audio.currentTime = 0;
+        audio.volume = 0;
+        audio.play().catch(() => {});
+        const steps    = 40;
+        const stepTime = duration / steps;
+        const stepVol  = targetVol / steps;
+        fadeInterval = setInterval(() => {
+            if (audio.volume + stepVol >= targetVol) {
+                audio.volume = targetVol;
+                clearInterval(fadeInterval);
+            } else {
+                audio.volume += stepVol;
+            }
+        }, stepTime);
+    }
+
+    function fadeOut(duration = 1800) {
+        if (!audio) return;
+        clearInterval(fadeInterval);
+        const steps    = 40;
+        const stepTime = duration / steps;
+        const stepVol  = audio.volume / steps;
+        fadeInterval = setInterval(() => {
+            if (audio.volume - stepVol <= 0) {
+                audio.volume = 0;
+                audio.pause();
+                clearInterval(fadeInterval);
+            } else {
+                audio.volume -= stepVol;
+            }
+        }, stepTime);
+    }
+
+    const envelope        = document.getElementById('envelope');
+    const overlay         = document.querySelector('.overlay');
+    const paper           = document.getElementById('paper');
+    const envWrap         = document.querySelector('.env-wrap');
+    const closeBtn        = document.getElementById('closeBtn');
+    const heartsContainer = document.getElementById('hearts-container');
+
+    function addHeart() {
+        if (!heartsContainer) return;
+        const h     = document.createElement('div');
+        h.className = 'heart';
+        const size  = 8 + Math.random() * 50;
+        h.style.width             = `${size}px`;
+        h.style.height            = `${size}px`;
+        h.style.left              = `${Math.random() * 100}%`;
+        h.style.top               = `${Math.random() * 100}%`;
+        h.style.animationDuration = (1 + Math.random() * 3).toFixed(2) + 's';
+        h.style.animationDelay    = (Math.random() * 1.5).toFixed(2) + 's';
+        h.style.opacity           = (0.5 + Math.random() * 0.5).toString();
+        heartsContainer.appendChild(h);
+    }
+
+    function spawnHearts(count) {
+        if (!heartsContainer) return;
+        for (let i = 0; i < count; i++) addHeart();
+        setTimeout(() => { for (let i = 0; i < Math.round(count * 0.7); i++) addHeart(); }, 250);
+        setTimeout(() => { for (let i = 0; i < Math.round(count * 0.5); i++) addHeart(); }, 600);
+        setTimeout(() => { for (let i = 0; i < Math.round(count * 0.4); i++) addHeart(); }, 1000);
+    }
+
+    function clearHearts() {
+        if (!heartsContainer) return;
+        Array.from(heartsContainer.children).forEach(h => {
+            h.classList.add('fade-out');
+            h.style.animationPlayState = 'paused';
+        });
+        setTimeout(() => {
+            while (heartsContainer.firstChild) heartsContainer.removeChild(heartsContainer.firstChild);
+        }, 1200);
+    }
+
+    function openPaper() {
+        if (paper)    { paper.setAttribute('aria-hidden', 'false'); paper.classList.add('visible'); paper.scrollTop = 0; }
+        if (closeBtn) closeBtn.classList.add('visible');
+        spawnHearts(80);
+        fadeIn();
+    }
+
+    function closePaper() {
+        if (paper)    { paper.classList.remove('visible'); paper.setAttribute('aria-hidden', 'true'); }
+        if (closeBtn) closeBtn.classList.remove('visible');
+        overlay.classList.remove('opened');
+        if (envWrap)  { envWrap.classList.remove('opening'); envWrap.style.left = ''; envWrap.style.top = ''; }
+        clearHearts();
+        fadeOut();
+    }
+
+    if (envelope && envWrap) {
+        envelope.addEventListener('click', () => {
+            overlay.classList.add('opened');
+            if (closeBtn) closeBtn.classList.remove('visible');
+            envWrap.classList.remove('opening');
+            void envWrap.offsetWidth;
+            envWrap.classList.add('opening');
+            const fallback = setTimeout(openPaper, 700);
+            envWrap.addEventListener('animationend', function onAnimEnd(e) {
+                if (e.animationName === 'envelopeOpen') {
+                    clearTimeout(fallback);
+                    openPaper();
+                    envWrap.removeEventListener('animationend', onAnimEnd);
+                }
+            });
+        });
+    }
+
+    if (paper)    paper.addEventListener('click', e => { if (e.target === paper) closePaper(); });
+    if (closeBtn) closeBtn.addEventListener('click', closePaper);
+</script>
+```
+
+</body>
+</html>
